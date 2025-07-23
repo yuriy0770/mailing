@@ -1,0 +1,28 @@
+[project]
+name = "mailing-management-service"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "origin",email = "yura28049119@yandex.ru"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+django = "^5.2.4"
+python-dotenv = "^1.1.1"
+
+
+[tool.poetry.group.link.dependencies]
+black = "^25.1.0"
+flake8 = "^7.3.0"
+isort = "^6.0.1"
+mypy = "^1.17.0"
+
