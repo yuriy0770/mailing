@@ -20,9 +20,9 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("home/", include('mailing.urls')),
+    path("", include('mailing.urls')),
 ]
 
 
 admin.site.site_header = "Панель администрирования"
-admin.site.index_title = "Известные бабы мира"
+admin.site.index_title = "Рассылки"

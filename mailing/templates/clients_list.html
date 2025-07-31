@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Клиенты{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Клиенты</h1>
+    <a class="btn btn-primary" href="{% url 'client_add' %}">Добавить клиента</a>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Ф.И.О.</th>
+            <th>Комментарий</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for client in clients %}
+            <tr>
+                <td>{{ client.email }}</td>
+                <td>{{ client.full_name }}</td>
+                <td>{{ client.comment|default_if_none:"-" }}</td>
+                <td>
+                    <a href="{% url 'client_edit' client.pk %}" class="btn btn-sm btn-outline-secondary">Редактировать</a>
+                    <a href="{% url 'client_delete' client.pk %}" class="btn btn-sm btn-outline-danger">Удалить</a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="4" class="text-center">Нет клиентов</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

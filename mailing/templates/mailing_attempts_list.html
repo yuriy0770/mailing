@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Попытки рассылки #{{ mailing.id }}{% endblock %}
+{% block content %}
+<h1>Попытки рассылки: #{{ mailing.id }} – {{ mailing.message.subject }}</h1>
+<a href="{% url 'mailings_list' %}" class="btn btn-secondary mb-3">← Назад к рассылкам</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Клиент</th>
+            <th>Email</th>
+            <th>Дата и время</th>
+            <th>Статус</th>
+            <th>Ответ почтового сервера</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for attempt in attempts %}
+            <tr>
+                <td>{{ attempt.client.full_name }}</td>
+                <td>{{ attempt.client.email }}</td>
+                <td>{{ attempt.date_time|date:"d.m.Y H:i:s" }}</td>
+                <td>
+                    {% if attempt.status == 'success' %}
+                        <span class="badge bg-success">Успешно</span>
+                    {% else %}
+                        <span class="badge bg-danger">Не успешно</span>
+                    {% endif %}
+                </td>
+                <td>{{ attempt.server_response }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="5" class="text-center">Попыток не зафиксировано</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

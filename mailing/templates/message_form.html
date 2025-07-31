@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}{{ view.object|default:"Добавить сообщение" }}{% endblock %}
+{% load form_tags %}
+{% block content %}
+<h1>{{ view.object|default:"Добавить сообщение" }}</h1>
+{% load form_tags %}
+<form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="mb-3">
+        <label for="id_subject" class="form-label">Тема письма</label>
+        {{ form.subject|add_class:"form-control" }}
+        {{ form.subject.errors }}
+    </div>
+    <div class="mb-3">
+        <label for="id_body" class="form-label">Тело письма</label>
+        {{ form.body|add_class:"form-control" }}
+        {{ form.body.errors }}
+    </div>
+    <button type="submit" class="btn btn-success">Сохранить</button>
+    <a href="{% url 'messages_list' %}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

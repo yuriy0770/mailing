@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}{{ view.object|default:"Добавить рассылку" }}{% endblock %}
+{% load form_tags %}
+{% block content %}
+<h1>{{ view.object|default:"Добавить рассылку" }}</h1>
+{% load form_tags %}
+<form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div class="mb-3">
+        <label for="id_message" class="form-label">Сообщение</label>
+        {{ form.message|add_class:"form-select" }}
+        {{ form.message.errors }}
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Получатели</label>
+        {{ form.clients }}
+        {{ form.clients.errors }}
+    </div>
+
+    <div class="mb-3">
+        <label for="id_first_send" class="form-label">Дата и время первой отправки</label>
+        {{ form.first_send|add_class:"form-control" }}
+        {{ form.first_send.errors }}
+    </div>
+
+    <div class="mb-3">
+        <label for="id_finish_send" class="form-label">Дата и время окончания отправки</label>
+        {{ form.finish_send|add_class:"form-control" }}
+        {{ form.finish_send.errors }}
+    </div>
+
+    <div class="mb-3">
+        <label for="id_status" class="form-label">Статус</label>
+        {{ form.status|add_class:"form-select" }}
+        {{ form.status.errors }}
+    </div>
+
+    <button type="submit" class="btn btn-success">Сохранить</button>
+    <a href="{% url 'mailings_list' %}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

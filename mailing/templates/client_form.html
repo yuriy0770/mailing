@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}{{ view.object|default:"Добавить клиента" }}{% endblock %}
+{% block content %}
+<h1>{{ view.object|default:"Добавить клиента" }}</h1>
+{% load form_tags %}
+<form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="mb-3">
+        <label for="id_email" class="form-label">Email</label>
+        {{ form.email|add_class:"form-control" }}
+        {{ form.email.errors }}
+    </div>
+    <div class="mb-3">
+        <label for="id_full_name" class="form-label">Ф.И.О.</label>
+        {{ form.full_name|add_class:"form-control" }}
+        {{ form.full_name.errors }}
+    </div>
+    <div class="mb-3">
+        <label for="id_comment" class="form-label">Комментарий</label>
+        {{ form.comment|add_class:"form-control" }}
+        {{ form.comment.errors }}
+    </div>
+    <button type="submit" class="btn btn-success">Сохранить</button>
+    <a href="{% url 'clients_list' %}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}
