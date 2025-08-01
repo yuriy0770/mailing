@@ -25,3 +25,11 @@ urlpatterns = [
     # Отправка рассылки вручную
     path('mailings/<int:pk>/send/', views.send_mailing, name='mailing_send'),
 ]
+
+urlpatterns += [
+    path('', views.home, name='home'),
+]
+
+urlpatterns += [
+    path('stats/', views.user_stats, name='user_stats'),
+]

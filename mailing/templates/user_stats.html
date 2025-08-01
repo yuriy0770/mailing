@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Статистика пользователя{% endblock %}
+{% block content %}
+<h1>Ваша статистика рассылок</h1>
+<ul class="list-group">
+    <li class="list-group-item">Всего рассылок: {{ total_mailings }}</li>
+    <li class="list-group-item">Успешных отправок: {{ success_attempts }}</li>
+    <li class="list-group-item">Неуспешных отправок: {{ failed_attempts }}</li>
+    <li class="list-group-item">Всего отправленных сообщений: {{ total_messages_sent }}</li>
+</ul>
+{% endblock %}
