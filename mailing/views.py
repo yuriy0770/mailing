@@ -1,23 +1,31 @@
 import threading
+from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
-from django.utils import timezone
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.generic import ListView
 from .models import Client, Message, Mailing, MailingAttempt
 from .forms import ClientForm, MessageForm, MailingForm
 from .utils import send_mailing_emails
 
 
 # Классы для Клиентов
-
+@method_decorator(cache_page(60*15), name='dispatch')
 class ClientList(ListView):
     model = Client
     template_name = 'clients_list.html'
     context_object_name = 'clients'
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser or user.groups.filter(name='manager').exists():
+            return Client.objects.all()
+        return Client.objects.filter(owner=user)
 
 class ClientCreate(CreateView):
     model = Client
@@ -30,6 +38,13 @@ class ClientUpdate(UpdateView):
     form_class = ClientForm
     template_name = 'client_form.html'
     success_url = reverse_lazy('clients_list')
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.groups.filter(name='manager').exists():
+            return Client.objects.none()
+
+        return Client.objects.filter(owner=user)
 
 class ClientDelete(DeleteView):
     model = Client
@@ -113,3 +128,41 @@ def send_mailing(request, pk):
 
     messages.success(request, 'Рассылка запущена на отправку.')
     return redirect('mailings_list')
+
+def home(request):
+    total_mailings = Mailing.objects.count()
+    active_mailings = Mailing.objects.filter(status='started').count()
+    # Получатели в рассылках — уникальные
+    unique_clients = Client.objects.filter(mailing__isnull=False).distinct().count()
+
+    context = {
+        'total_mailings': total_mailings,
+        'active_mailings': active_mailings,
+        'unique_clients': unique_clients,
+    }
+    return render(request, 'home.html', context)
+
+@login_required
+def user_stats(request):
+    user = request.user
+
+    mailings = user.mailings.all()
+    total_mailings = mailings.count()
+
+    success_attempts = MailingAttempt.objects.filter(
+        mailing__owner=user, status='success'
+    ).count()
+
+    failed_attempts = MailingAttempt.objects.filter(
+        mailing__owner=user, status='failed'
+    ).count()
+
+    total_messages_sent = success_attempts  # можно считать так
+
+    context = {
+        'total_mailings': total_mailings,
+        'success_attempts': success_attempts,
+        'failed_attempts': failed_attempts,
+        'total_messages_sent': total_messages_sent,
+    }
+    return render(request, 'user_stats.html', context)

@@ -19,6 +19,9 @@ build-backend = "poetry.core.masonry.api"
 django = "^5.2.4"
 python-dotenv = "^1.1.1"
 psycopg2 = "^2.9.10"
+django-allauth = "^65.10.0"
+requests = "^2.32.4"
+django-redis = "^6.0.0"
 
 
 [tool.poetry.group.link.dependencies]
